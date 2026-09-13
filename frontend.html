@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penerjemah Audio JP ke ID Subtitle</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+    <h2>Penerjemah Audio Jepang &rarr; Subtitle Indonesia (.srt)</h2>
+    <input type="file" id="audioInput" accept="audio/*" />
+    <br><br>
+    <button onclick="processAudio()" style="padding: 10px 20px;">Proses Audio Jadi SRT</button>
+    <div id="status" style="margin-top: 15px;"></div>
+
+    <script>
+    async function processAudio() {
+        const fileInput = document.getElementById('audioInput');
+        const status = document.getElementById('status');
+        if (!fileInput.files[0]) return alert("Pilih file audio terlebih dahulu!");
+
+        status.innerText = "Menerjemahkan audio... Mohon tunggu.";
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        try {
+            const res = await fetch("https://URL-BACKEND-KAMU/generate-srt/", { method: "POST", body: formData });
+            const data = await res.json();
+            
+            const blob = new Blob([data.srt_result], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "subtitle_indonesia.srt";
+            link.click();
+            status.innerText = "Selesai! Subtitle .srt berhasil diunduh.";
+        } catch (err) {
+            status.innerText = "Gagal memproses audio.";
+        }
+    }
+    </script>
+</body>
+</html>
