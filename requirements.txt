@@ -1,5 +1,0 @@
-fastapi
-uvicorn
-openai-whisper
-deep-translator
-python-multipart
